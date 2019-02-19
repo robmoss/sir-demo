@@ -124,6 +124,11 @@
      var btn = d3.select('#step');
      var log = d3.select('#event');
 
+     if (model.state.length == 0) {
+       state[0][0].disabled = true;
+       btn[0][0].disabled = true;
+     }
+
      reset.on("click", () => {
        SIR.reset(model);
        var infs = model.state.map((elt, ix) => ix).filter(ix =>
