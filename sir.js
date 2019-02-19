@@ -94,6 +94,9 @@ SIR.update = function(model) {
     rates[0] = beta * I * S / (model.N - 1);
     rates[1] = I / model.inv_gamma;
     var net_rate = rates[0] + rates[1];
+    // Update the displayed event rates.
+    d3.select(".show_rate.inf").text(rates[0].toFixed(3));
+    d3.select(".show_rate.rec").text(rates[1].toFixed(3));
     // console.log("S = %d, I = %d, rates = %s", S, I, rates);
     if (net_rate > 0) {
         // Pick the time to the next event.

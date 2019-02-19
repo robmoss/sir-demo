@@ -29,9 +29,13 @@
       <h2>Event rates</h2>
       <span class="rate">
         Infection: \(\beta \cdot I \cdot \frac{S}{N - 1}\)
+        \(\quad\implies\quad\)
+        <span class="show_rate inf"></span>
       </span>
       <span class="rate">
         Recovery: \(\gamma \cdot I\)
+        \(\quad\implies\quad\)
+        <span class="show_rate rec"></span>
       </span>
     </div>
 
@@ -145,7 +149,7 @@
          var R = model.state.filter(person => person == 2).length;
          var pcnt = Math.round(100 * R / model.N);
          log.text("End of outbreak; " + R + " total infections (" + pcnt + "%)"
-                + " in " + (Math.round(10 * model.t) / 10) + " days");
+                + " in " + model.t.toFixed(1) + " days");
        } else {
          var I = model.state.filter(person => person == 1).length;
          var pcnt = Math.round(100 * I / model.N);
