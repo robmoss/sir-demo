@@ -82,9 +82,9 @@
 
     <div id="simulation">
       <h2>Outbreak</h2>
-      <button id="reset">Initialise</button>
-      <button id="state">Model state</button>
-      <button id="step">Next event</button>
+      <button id="reset">Start outbreak</button>
+      <button id="step" disabled>Next event</button>
+      <button id="state" disabled>Show model state</button>
       <div id="event"></span>
     </div>
 
@@ -131,6 +131,8 @@
        );
        var inf_lbls = Array.from(infs).map(e => "#" + e.toString());
        log.text("Initially infected: Person " + inf_lbls.toString());
+       state[0][0].disabled = false;
+       btn[0][0].disabled = false;
      });
      btn.on("click", () => {
        var event = SIR.update(model);
