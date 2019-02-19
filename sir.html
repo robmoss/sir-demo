@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stochastic SIR model</title>
+    <script type="text/javascript" src="d3.min.js" charset="utf-8">
+    </script>
+    <link rel="stylesheet" type="text/css" href="sir.css" />
+    <link rel="stylesheet" type="text/css" href="slider.css" />
+    <script type="text/x-mathjax-config">
+     MathJax.Hub.Config({
+       TeX: { equationNumbers: {
+         autoNumber: "AMS",
+         extensions: ["color.js"]
+       }}});
+    </script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  </head>
+  <body>
+
+    <h1>Stochastic SIR model</h1>
+
+    <div id="diagram">
+      <img src="model-diagram.png" />
+    </div>
+
+    <div id="model-params">
+      <h2>Parameters</h2>
+      <span class="plot-control">
+        <input id="R0" type="range" min="0" max="0" />
+        <label for="R0">R<sub>0</sub>:</label>
+        <span class="show_value"></span>
+      </span>
+      <span class="plot-control">
+        <input id="inv_gamma" type="range" min="0" max="0" />
+        <label for="inv_gamma">Infectious period
+          \(\left(\frac{1}{\gamma}\right)\):</label>
+        <span class="show_value"></span>
+      </span>
+      <span class="plot-control">
+        <input id="N" type="range" min="0" max="0" />
+        <label for="N">Population size
+          \(\left(N\right)\):</label>
+        <span class="show_value"></span>
+      </span>
+    </div>
+
+    <div id="simulation">
+      <h2>Outbreak</h2>
+      <button id="reset">Initialise</button>
+      <button id="state">Model state</button>
+      <button id="step">Next event</button>
+      <div id="event"></span>
+    </div>
+
+    <div id="footer">
+      <a href="https://bitbucket.org/robmoss/sir-demo-javascript">Available on Bitbucket</a>
+    </div>
+
+    <script type="text/javascript" src="sir.js" charset="utf-8"></script>
+    <script type="text/javascript">
+     var param_vals = {
+       R0: [{value: 1.0}, {value: 1.1}, {value: 1.2},
+            {value: 1.4, default: true}, {value: 1.6}, {value: 1.8},
+            {value: 2.0}, {value: 2.5}, {value: 3.0}, {value: 4.0},
+            {value: 5.0}, {value: 10.0}],
+       N: [{value: 2}, {value: 3}, {value: 4}, {value: 5},
+           {value: 6}, {value: 7}, {value: 8}, {value: 9}, {value: 10},
+           {value: 11}, {value: 12}, {value: 13}, {value: 14}, {value: 15},
+           {value: 16}, {value: 17}, {value: 18}, {value: 19}, {value: 20},
+           {value: 21}, {value: 22}, {value: 23}, {value: 24}, {value: 25},
+           {value: 26}, {value: 27}, {value: 28}, {value: 29}, {value: 30},
+           {value: 31}, {value: 32}, {value: 33}, {value: 34}, {value: 35},
+           {value: 36}, {value: 37}, {value: 38}, {value: 39}, {value: 40},
+           {value: 41}, {value: 42}, {value: 43}, {value: 44}, {value: 45},
+       ],
+       inv_gamma: [{value: 0.5, label: '½ day'},
+                   {value: 1.0, label: '1 day'},
+                   {value: 2.0, label: '2 days'},
+                   {value: 4.0, label: '4 days', default: true},
+                   {value: 7.0, label: '1 week'}]
+     };
+
+     var model = SIR.model(0, 0, 0, 1);
+     SIR.init_sliders('#model-params', param_vals, model);
+
+     var reset = d3.select('#reset');
+     var state = d3.select('#state');
+     var btn = d3.select('#step');
+     var log = d3.select('#event');
+
+     reset.on("click", () => {
+       SIR.reset(model);
+       var infs = model.state.map((elt, ix) => ix).filter(ix =>
+         model.state[ix] == 1
+       );
+       var inf_lbls = Array.from(infs).map(e => "#" + e.toString());
+       log.text("Initially infected: Person " + inf_lbls.toString());
+     });
+     btn.on("click", () => {
+       var event = SIR.update(model);
+       if (event === null) {
+         var R = model.state.filter(person => person == 2).length;
+         var pcnt = Math.round(100 * R / model.N);
+         log.text("End of outbreak; " + R + " total infections (" + pcnt + "%)");
+       } else {
+         var I = model.state.filter(person => person == 1).length;
+         var pcnt = Math.round(100 * I / model.N);
+         if (event.event_ix == 0) {
+           log.text("Person #" + event.person_ix + " is infected; " + I
+                  + " infectious people (" + pcnt + "%)");
+         } else {
+           log.text("Person #" + event.person_ix + " has recovered; " + I
+                  + " infectious people (" + pcnt + "%)");
+         }
+       }
+     });
+
+     state.on("click", () => {
+       log.text("[" + model.state.toString() + "]");
+     });
+    </script>
+  </body>
+</html>
