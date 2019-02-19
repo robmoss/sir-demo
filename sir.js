@@ -34,9 +34,13 @@ SIR.init_sliders = function(selector, param_vals, model) {
 
                     // Update the parameter value.
                     model[this.id] = this.data[ix].value;
-                    // TODO: reset the model state?
-                    // SIR.reset(model);
-                } else {
+                    // Update the displayed value of beta.
+                    var beta_label = d3.select(".show_value.beta")[0][0];
+                    beta_label.textContent = model.R0 / model.inv_gamma;
+                    // Update the displayed value of gamma.
+                    var gamma_label = d3.select(".show_value.gamma")[0][0];
+                    gamma_label.textContent = 1.0 / model.inv_gamma;
+               } else {
                     plot.params[this.id] = parseFloat(this.value);
                 }
             }
@@ -78,19 +82,6 @@ SIR.model = function(R0, inv_gamma, N, I0) {
     // State vector for N individuals; 0 = S, 1 = I, 2 = R.
     var model = {state: [], R0: R0, inv_gamma: inv_gamma, N: N, I0: I0, t: 0.0};
     SIR.reset(model);
-    // var i;
-    // for (i = 0; i < state.length; i++) {
-    //     state[i] = 0;
-    // }
-    // var n_inf = 0;
-    // var rand;
-    // while (n_inf < I0) {
-    //     rand = Math.round((N + 1) * Math.random() - 0.5);
-    //     if (state[rand] == 0) {
-    //         state[rand] = 1;
-    //         n_inf += 1;
-    //     }
-    // }
     return model;
 };
 

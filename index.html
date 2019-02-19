@@ -25,25 +25,59 @@
       <img src="model-diagram.png" />
     </div>
 
+    <div id="event-rates">
+      <h2>Event rates</h2>
+      <span class="rate">
+        Infection: \(\beta \cdot I \cdot \frac{S}{N - 1}\)
+      </span>
+      <span class="rate">
+        Recovery: \(\gamma \cdot I\)
+      </span>
+    </div>
+
     <div id="model-params">
       <h2>Parameters</h2>
-      <span class="plot-control">
-        <input id="R0" type="range" min="0" max="0" />
-        <label for="R0">R<sub>0</sub>:</label>
-        <span class="show_value"></span>
-      </span>
-      <span class="plot-control">
-        <input id="inv_gamma" type="range" min="0" max="0" />
-        <label for="inv_gamma">Infectious period
-          \(\left(\frac{1}{\gamma}\right)\):</label>
-        <span class="show_value"></span>
-      </span>
-      <span class="plot-control">
-        <input id="N" type="range" min="0" max="0" />
-        <label for="N">Population size
-          \(\left(N\right)\):</label>
-        <span class="show_value"></span>
-      </span>
+      <table>
+        <tr>
+          <td>
+            <span class="plot-control">
+              <input id="R0" type="range" min="0" max="0" />
+              <label for="R0">R<sub>0</sub>:</label>
+              <span class="show_value"></span>
+            </span>
+          </td>
+          <td>
+            \(\quad\implies\quad\beta\):
+            <span class="show_value beta"></span>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <span class="plot-control">
+              <input id="inv_gamma" type="range" min="0" max="0" />
+              <label for="gamma_inv">Infectious period
+                \(\left(\frac{1}{\gamma}\right)\):</label>
+              <span class="show_value"></span>
+            </span>
+          </td>
+          <td>
+            \(\quad\implies\quad\gamma\):
+            <span class="show_value gamma"></span>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <span class="plot-control">
+              <input id="N" type="range" min="0" max="0" />
+              <label for="N">Population size
+                \(\left(N\right)\):</label>
+              <span class="show_value"></span>
+            </span>
+          </td>
+          <td>
+          </td>
+        </tr>
+      </table>
     </div>
 
     <div id="simulation">
