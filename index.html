@@ -139,7 +139,8 @@
        if (event === null) {
          var R = model.state.filter(person => person == 2).length;
          var pcnt = Math.round(100 * R / model.N);
-         log.text("End of outbreak; " + R + " total infections (" + pcnt + "%)");
+         log.text("End of outbreak; " + R + " total infections (" + pcnt + "%)"
+           + " in " + (Math.round(10 * model.t) / 10) + " days");
        } else {
          var I = model.state.filter(person => person == 1).length;
          var pcnt = Math.round(100 * I / model.N);
