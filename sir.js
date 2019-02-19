@@ -56,6 +56,7 @@ SIR.init_sliders = function(selector, param_vals, model) {
 };
 
 SIR.reset = function(model) {
+    model.t = 0.0;
     model.state = new Uint8Array(model.N);
     for (var i = 0; i < model.state.length; i++) {
         model.state[i] = 0;
