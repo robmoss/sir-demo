@@ -98,8 +98,8 @@
       <h2>Outbreak</h2>
       <button id="reset">Start outbreak</button>
       <button id="step" disabled>Next event</button>
-      <button id="state" disabled>Show population status</button>
-      <div id="event"></span>
+      <div id="event"></div>
+      <div id="population"></div>
     </div>
 
     <div id="footer">
@@ -137,15 +137,18 @@
      SIR.init_sliders('#model-params', param_vals, model);
 
      var reset = d3.select('#reset');
-     var state = d3.select('#state');
-     var btn = d3.select('#step');
+     var step = d3.select('#step');
      var log = d3.select('#event');
+     var popn = d3.select('#population');
      var inf_rate = d3.select('.show_rate.inf');
      var rec_rate = d3.select('.show_rate.rec');
 
+     var labels = ['<span class="S">S</span>',
+                   '<span class="I">I</span>',
+                   '<span class="R">R</span>'];
+
      if (model.state.length == 0) {
-       state[0][0].disabled = true;
-       btn[0][0].disabled = true;
+       step[0][0].disabled = true;
      }
 
      reset.on("click", () => {
@@ -153,39 +156,43 @@
        var infs = model.state.map((elt, ix) => ix).filter(ix =>
          model.state[ix] == 1
        );
-       var inf_lbls = Array.from(infs).map(e => "#" + e.toString());
+       var inf_lbls = Array.from(infs).map(e => "#" + (e + 1).toString());
        log.text("Initially infected: Person " + inf_lbls.toString());
-       state[0][0].disabled = false;
-       btn[0][0].disabled = false;
+       step[0][0].disabled = false;
        inf_rate.text("");
        rec_rate.text("");
+       var states = Array.from(model.state).map(s => labels[s]);
+       popn.html("[" + states.toString() + "]");
      });
-     btn.on("click", () => {
+     step.on("click", () => {
        var event = SIR.update(model);
        if (event === null) {
          var R = model.state.filter(person => person == 2).length;
          var pcnt = Math.round(100 * R / model.N);
-         log.text("End of outbreak; " + R + " total infections (" + pcnt + "%)"
+         var infections = "infections";
+         if (R == 1) {
+           infections = "infection";
+         }
+         log.text("End of outbreak; " + R + " total " + infections
+                + " (" + pcnt + "%)"
                 + " in " + model.t.toFixed(1) + " days");
        } else {
          var I = model.state.filter(person => person == 1).length;
          var pcnt = Math.round(100 * I / model.N);
+         var people = "people";
+         if (I == 1) {
+           people = "person";
+         }
          if (event.event_ix == 0) {
-           log.text("Person #" + event.person_ix + " is infected; " + I
-                  + " infectious people (" + pcnt + "%)");
+           log.text("Person #" + (event.person_ix + 1) + " is infected; "
+                  + I + " infectious " + people + " (" + pcnt + "%)");
          } else {
-           log.text("Person #" + event.person_ix + " has recovered; " + I
-                  + " infectious people (" + pcnt + "%)");
+           log.text("Person #" + (event.person_ix + 1) + " has recovered; "
+                  + I + " infectious " + people + " (" + pcnt + "%)");
          }
        }
-     });
-
-     state.on("click", () => {
-       var labels = ['<span class="S">S</span>',
-                     '<span class="I">I</span>',
-                     '<span class="R">R</span>'];
        var states = Array.from(model.state).map(s => labels[s]);
-       log.html("[" + states.toString() + "]");
+       popn.html("[" + states.toString() + "]");
      });
     </script>
   </body>
