@@ -137,6 +137,8 @@
      var state = d3.select('#state');
      var btn = d3.select('#step');
      var log = d3.select('#event');
+     var inf_rate = d3.select('.show_rate.inf');
+     var rec_rate = d3.select('.show_rate.rec');
 
      if (model.state.length == 0) {
        state[0][0].disabled = true;
@@ -152,6 +154,8 @@
        log.text("Initially infected: Person " + inf_lbls.toString());
        state[0][0].disabled = false;
        btn[0][0].disabled = false;
+       inf_rate.text("");
+       rec_rate.text("");
      });
      btn.on("click", () => {
        var event = SIR.update(model);
