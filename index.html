@@ -98,7 +98,7 @@
       <h2>Outbreak</h2>
       <button id="reset">Start outbreak</button>
       <button id="step" disabled>Next event</button>
-      <button id="state" disabled>Show model state</button>
+      <button id="state" disabled>Show population status</button>
       <div id="event"></span>
     </div>
 
@@ -178,7 +178,11 @@
      });
 
      state.on("click", () => {
-       log.text("[" + model.state.toString() + "]");
+       var labels = ['<span class="S">S</span>',
+                     '<span class="I">I</span>',
+                     '<span class="R">R</span>'];
+       var states = Array.from(model.state).map(s => labels[s]);
+       log.html("[" + states.toString() + "]");
      });
     </script>
   </body>

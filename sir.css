@@ -7,6 +7,9 @@ div { padding-bottom: 1rem; padding-left: 1.5rem; }
 #diagram img { width: 30rem; }
 span.rate { display: block; margin-bottom: 0.5rem; }
 #event {padding-top: 1rem; font-size: 1.5rem; }
+span.S { color: #007f00; min-width: 1.5rem; display: inline-block; text-align: center; }
+span.I { color: #ff0000; min-width: 1.5rem; display: inline-block; text-align: center; }
+span.R { color: #0000ff; min-width: 1.5rem; display: inline-block; text-align: center; }
 
 #footer { text-align: center; padding-top: 2rem; font-size: 90%; }
 #footer a:link, #footer a:visited, #footer a:hover, #footer a:focus, #footer a:active { color: #3182bd; }
