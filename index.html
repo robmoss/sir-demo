@@ -151,6 +151,18 @@
        step[0][0].disabled = true;
      }
 
+     var display_rates = function() {
+       // Update the displayed event rates.
+       var rates = new Float64Array(2);
+       var S = model.state.filter(person => person == 0).length;
+       var I = model.state.filter(person => person == 1).length;
+       var beta = model.R0 / model.inv_gamma;
+       rates[0] = beta * I * S / (model.N - 1);
+       rates[1] = I / model.inv_gamma;
+       inf_rate.text(rates[0].toFixed(3));
+       rec_rate.text(rates[1].toFixed(3));
+     };
+
      reset.on("click", () => {
        SIR.reset(model);
        var infs = model.state.map((elt, ix) => ix).filter(ix =>
@@ -159,11 +171,11 @@
        var inf_lbls = Array.from(infs).map(e => "#" + (e + 1).toString());
        log.text("Initially infected: Person " + inf_lbls.toString());
        step[0][0].disabled = false;
-       inf_rate.text("");
-       rec_rate.text("");
+       display_rates();
        var states = Array.from(model.state).map(s => labels[s]);
        popn.html("[" + states.toString() + "]");
      });
+
      step.on("click", () => {
        var event = SIR.update(model);
        if (event === null) {
@@ -191,6 +203,7 @@
                   + I + " infectious " + people + " (" + pcnt + "%)");
          }
        }
+       display_rates();
        var states = Array.from(model.state).map(s => labels[s]);
        popn.html("[" + states.toString() + "]");
      });
