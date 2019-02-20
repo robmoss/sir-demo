@@ -1,4 +1,4 @@
-# Interactive SEIR disease model
+# Interactive SIR disease model
 
 This repository contains an interactive SIR disease model that runs in a web
 browser ([example](http://mathmodelling.sph.unimelb.edu.au/~rgm/sir-demo/)).
