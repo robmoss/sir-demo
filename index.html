@@ -197,10 +197,12 @@
          }
          if (event.event_ix == 0) {
            log.text("Person #" + (event.person_ix + 1) + " is infected; "
-                  + I + " infectious " + people + " (" + pcnt + "%)");
+                  + I + " infectious " + people + " (" + pcnt + "%)"
+                  + " at t = " + model.t.toFixed(1) + " days");
          } else {
            log.text("Person #" + (event.person_ix + 1) + " has recovered; "
-                  + I + " infectious " + people + " (" + pcnt + "%)");
+                  + I + " infectious " + people + " (" + pcnt + "%)"
+                  + " at t = " + model.t.toFixed(1) + " days");
          }
        }
        display_rates();
