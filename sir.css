@@ -13,3 +13,10 @@ span.R { color: #0000ff; min-width: 1.5rem; display: inline-block; text-align: c
 
 #footer { text-align: center; padding-top: 2rem; font-size: 90%; }
 #footer a:link, #footer a:visited, #footer a:hover, #footer a:focus, #footer a:active { color: #3182bd; }
+
+svg.plot {width: 40rem; max-height: 20rem; }
+line.axis { stroke: #000000; stroke-width: 2; }
+path.series { stroke-width: 4; fill: none; }
+path.series.s { stroke: #007f00; }
+path.series.i { stroke: #ff0000; }
+path.series.r { stroke: #0000ff; }
