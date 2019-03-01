@@ -25,6 +25,8 @@ Plot.initialise = function(selector, model, width, height) {
 // Initialise the plot for a new outbreak.
 Plot.start_outbreak = function(plot) {
     Plot.reset_data(plot);
+    // Set the default x-axis range to be double the infectious period.
+    plot.x_max = 2 * model.inv_gamma;
     plot.axis.x = d3.scale.linear().domain([0, plot.x_max])
         .range([0, plot.width]);
     plot.axis.y = d3.scale.linear().domain([0, model.N])
@@ -89,7 +91,7 @@ Plot.update_data = function(plot) {
     plot.r.push({x: plot.model.t, y: R});
 
     if (plot.model.t > plot.x_max) {
-        plot.x_max = plot.model.t + 1.0;
+        plot.x_max = plot.model.t + model.inv_gamma;
         plot.axis.x = d3.scale.linear().domain([0, plot.x_max])
             .range([0, plot.width]);
     }
