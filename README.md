@@ -37,6 +37,6 @@ This model is distributed under the terms of the BSD 3-Clause license:
     NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-This repository also includes [D3.js](https://d3js.org/) 3.5.17 (copyright
-2010-2015 Mike Bostock), which is distributed under the terms of the BSD
-3-Clause license.
+This repository also includes [D3.js](https://d3js.org/) 5.9.1 (copyright
+2019 Mike Bostock), which is distributed under the terms of the BSD 3-Clause
+license.

@@ -25,21 +25,21 @@ SIR.init_sliders = function(selector, param_vals, model) {
                     // Display the parameter value.
                     var ix = parseInt(this.value);
                     var parent = d3.select(this.parentNode);
-                    var label = parent.select(".show_value")[0][0];
+                    var label = parent.select(".show_value");
                     if (this.data[ix].label !== undefined) {
-                        label.textContent = this.data[ix].label;
+                        label.text(this.data[ix].label);
                     } else {
-                        label.textContent = this.data[ix].value;
+                        label.text(this.data[ix].value);
                     }
 
                     // Update the parameter value.
                     model[this.id] = this.data[ix].value;
                     // Update the displayed value of beta.
-                    var beta_label = d3.select(".show_value.beta")[0][0];
-                    beta_label.textContent = model.R0 / model.inv_gamma;
+                    var beta_label = d3.select(".show_value.beta");
+                    beta_label.text((model.R0 / model.inv_gamma).toFixed(3));
                     // Update the displayed value of gamma.
-                    var gamma_label = d3.select(".show_value.gamma")[0][0];
-                    gamma_label.textContent = 1.0 / model.inv_gamma;
+                    var gamma_label = d3.select(".show_value.gamma");
+                    gamma_label.text((1.0 / model.inv_gamma).toFixed(3));
                } else {
                     plot.params[this.id] = parseFloat(this.value);
                 }

@@ -2,7 +2,7 @@
 var Plot = Plot || {};
 
 // Create the SVG element that will contain the plot.
-Plot.initialise = function(selector, model, width, height) {
+Plot.initialise = function(selector, model, width, height, m_x, m_y) {
     var container = d3.select(selector);
     var svg = container.append('svg')
         .attr('class', 'plot')
@@ -14,6 +14,8 @@ Plot.initialise = function(selector, model, width, height) {
         model: model,
         width: width,
         height: height,
+        margin_x: m_x,
+        margin_y: m_y,
         // Set the default x-axis range to be double the infectious period.
         x_max: 2 * model.inv_gamma,
         container: container,
@@ -27,25 +29,8 @@ Plot.start_outbreak = function(plot) {
     Plot.reset_data(plot);
     // Set the default x-axis range to be double the infectious period.
     plot.x_max = 2 * model.inv_gamma;
-    plot.axis.x = d3.scale.linear().domain([0, plot.x_max])
-        .range([0, plot.width]);
-    plot.axis.y = d3.scale.linear().domain([0, model.N])
-        .range([plot.height, 0]);
-    // Draw the bottom x-axis.
-    plot.axis.x_bot = plot.svg_group.append("svg:line")
-        .attr("class", "axis x");
-    plot.axis.x_bot
-        .attr("x1", 0)
-        .attr("y1", plot.height)
-        .attr("x2", plot.width)
-        .attr("y2", plot.height);
-    plot.axis.y_left = plot.svg_group.append("svg:line")
-        .attr("class", "axis y");
-    plot.axis.y_left
-        .attr("x1", 0)
-        .attr("y1", 0)
-        .attr("x2", 0)
-        .attr("y2", plot.height);
+    Plot.define_axes(plot);
+    // Create empty paths for each time series.
     plot.series.s = plot.svg_group.append('svg:path')
         .attr('class', 'series s');
     plot.series.i = plot.svg_group.append('svg:path')
@@ -59,10 +44,10 @@ Plot.start_outbreak = function(plot) {
 Plot.next_event = function(plot) {
     Plot.update_data(plot);
 
-    var plot_line = d3.svg.line()
-        .x(function(d) { return plot.axis.x(d.x); })
-        .y(function(d) { return plot.axis.y(d.y); })
-        .interpolate('step-after');
+    var plot_line = d3.line()
+        .x(function(d) { return plot.scale.x(d.x); })
+        .y(function(d) { return plot.scale.y(d.y); })
+        .curve(d3.curveStepAfter);
 
     plot.series.s.attr('d', plot_line(plot.s));
     plot.series.i.attr('d', plot_line(plot.i));
@@ -76,6 +61,7 @@ Plot.reset_data = function(plot) {
     plot.s = [];
     plot.i = [];
     plot.r = [];
+    plot.scale = {};
     plot.axis = {};
     plot.series = {};
 };
@@ -92,7 +78,30 @@ Plot.update_data = function(plot) {
 
     if (plot.model.t > plot.x_max) {
         plot.x_max = plot.model.t + model.inv_gamma;
-        plot.axis.x = d3.scale.linear().domain([0, plot.x_max])
-            .range([0, plot.width]);
+        plot.svg_group.selectAll('.axis.x').remove();
+        plot.svg_group.selectAll('.axis.y').remove();
+        Plot.define_axes(plot);
     }
+};
+
+// Internal function: (re)defined axis scales and (re)create axes.
+Plot.define_axes = function(plot) {
+    // Create the axis scales.
+    plot.scale.x = d3.scaleLinear().domain([0, plot.x_max])
+        .range([plot.margin_x, plot.width - plot.margin_x]);
+    plot.scale.y = d3.scaleLinear().domain([0, model.N])
+        .range([plot.height - plot.margin_y, plot.margin_y]);
+    // Create the axis objects.
+    plot.axis.x = d3.axisBottom(plot.scale.x);
+    plot.axis.y = d3.axisLeft(plot.scale.y);
+    plot.svg_group
+        .append('g')
+        .attr('class', 'axis x')
+        .attr('transform', 'translate(0,' + (plot.height - plot.margin_y) + ')')
+        .call(plot.axis.x);
+    plot.svg_group
+        .append('g')
+        .attr('class', 'axis y')
+        .attr('transform', 'translate(' + plot.margin_x + ',0)')
+        .call(plot.axis.y);
 };
