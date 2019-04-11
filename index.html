@@ -97,6 +97,7 @@
       <h2>Outbreak</h2>
       <button id="reset">Start outbreak</button>
       <button id="step" disabled>Next event</button>
+      <button id="run" disabled>Run to end</button>
       <div id="event"></div>
       <div id="population"></div>
     </div>
@@ -140,6 +141,7 @@
 
      var reset = d3.select('#reset');
      var step = d3.select('#step');
+     var run = d3.select('#run');
      var log = d3.select('#event');
      var popn = d3.select('#population');
      var inf_rate = d3.select('.show_rate.inf');
@@ -151,6 +153,7 @@
 
      if (model.state.length == 0) {
        step.property('disabled', true);
+       run.property('disabled', true);
      }
 
      var plot = Plot.initialise('#time-series-plot', model, 800, 400, 48, 48);
@@ -175,10 +178,33 @@
        var inf_lbls = Array.from(infs).map(e => "#" + (e + 1).toString());
        log.text("Initially infected: Person " + inf_lbls.toString());
        step.property('disabled', false);
+       run.property('disabled', false);
        display_rates();
        var states = Array.from(model.state).map(s => labels[s]);
        popn.html("[" + states.toString() + "]");
        Plot.start_outbreak(plot);
+     });
+
+     run.on("click", () => {
+       var event = SIR.update(model);
+       while (event !== null) {
+         Plot.next_event(plot);
+         event = SIR.update(model);
+       }
+       var R = model.state.filter(person => person == 2).length;
+       var pcnt = Math.round(100 * R / model.N);
+       var infections = "infections";
+       if (R == 1) {
+         infections = "infection";
+       }
+       log.text("End of outbreak; " + R + " total " + infections
+              + " (" + pcnt + "%)"
+              + " in " + model.t.toFixed(1) + " days");
+       display_rates();
+       var states = Array.from(model.state).map(s => labels[s]);
+       popn.html("[" + states.toString() + "]");
+       step.property('disabled', true);
+       run.property('disabled', true);
      });
 
      step.on("click", () => {
@@ -193,6 +219,8 @@
          log.text("End of outbreak; " + R + " total " + infections
                 + " (" + pcnt + "%)"
                 + " in " + model.t.toFixed(1) + " days");
+         step.property('disabled', true);
+         run.property('disabled', true);
        } else {
          var I = model.state.filter(person => person == 1).length;
          var pcnt = Math.round(100 * I / model.N);
