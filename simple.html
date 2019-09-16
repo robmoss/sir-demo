@@ -65,6 +65,11 @@
 
     <div id="simulation">
       <h2>Outbreak</h2>
+      <select id="playbook">
+        <option value="0">Random events</option>
+        <option value="1">Extinction</option>
+        <option value="2">Take-off</option>
+      </select>
       <button id="reset">Start outbreak</button>
       <button id="step" disabled>Next event</button>
       <div id="event"></div>
@@ -117,12 +122,15 @@
      var step = d3.select('#step');
      var log = d3.select('#event');
      var popn = d3.select('#population');
+     var playbook = d3.select('#playbook');
      var inf_rate = d3.select('.show_rate.inf');
      var rec_rate = d3.select('.show_rate.rec');
 
      var labels = ['<span class="S">S</span>',
                    '<span class="I">I</span>',
                    '<span class="R">R</span>'];
+
+     var playbook_events = [];
 
      if (model.state.length == 0) {
        step.property('disabled', true);
@@ -154,10 +162,20 @@
        var states = Array.from(model.state).map(s => labels[s]);
        popn.html("[" + states.toString() + "]");
        Plot.start_outbreak(plot);
+       // Construct the playbook events.
+       if (playbook.property("value") == 0) {
+         // Random events.
+         playbook_events = [];
+       } else if (playbook.property("value") == 1) {
+         // Extinction.
+         playbook_events = [0, 1, 1];
+       } else if (playbook.property("value") == 2) {
+         playbook_events = [0, 0, 0, 0, 0, 0, 1, 0];
+       }
      });
 
      step.on("click", () => {
-       var event = SIR.update(model);
+       var event = SIR.update(model, playbook_events.shift());
        if (event === null) {
          var R = model.state.filter(person => person == 2).length;
          var pcnt = Math.round(100 * R / model.N);

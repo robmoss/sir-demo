@@ -86,7 +86,7 @@ SIR.model = function(R0, inv_gamma, N, I0) {
     return model;
 };
 
-SIR.update = function(model) {
+SIR.update = function(model, next_event) {
     var rates = new Float64Array(2);
     var S = model.state.filter(person => person == 0).length;
     var I = model.state.filter(person => person == 1).length;
@@ -106,8 +106,16 @@ SIR.update = function(model) {
         var event_ix;
         var person_ix;
         var counter = 0;
-        if (rand_event > rates[0]) {
+        if (next_event === 0) {
+            event_ix = 0;
+        } else if (next_event == 1) {
             event_ix = 1;
+        } else if (rand_event > rates[0]) {
+            event_ix = 1;
+        } else {
+            event_ix = 0;
+        }
+        if (event_ix === 1) {
             sample = Math.round(I * Math.random() + 0.5);
             // Find the Nth infectious individual.
             // console.log("Recover I #%d", sample);
@@ -122,7 +130,6 @@ SIR.update = function(model) {
                 }
             });
         } else {
-            event_ix = 0;
             sample = Math.round(S * Math.random() + 0.5);
             // Find the Nth susceptible individual.
             // console.log("Infect S #%d", sample);
