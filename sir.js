@@ -106,9 +106,9 @@ SIR.update = function(model, next_event) {
         var event_ix;
         var person_ix;
         var counter = 0;
-        if (next_event === 0) {
+        if (next_event === 0 && rates[0] > 0) {
             event_ix = 0;
-        } else if (next_event == 1) {
+        } else if (next_event == 1 && rates[1] > 0) {
             event_ix = 1;
         } else if (rand_event > rates[0]) {
             event_ix = 1;
