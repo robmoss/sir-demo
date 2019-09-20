@@ -10,6 +10,7 @@ span.rate { display: block; margin-bottom: 0.5rem; }
 span.S { color: #0000ff; min-width: 1.5rem; display: inline-block; text-align: center; }
 span.I { color: #ff0000; min-width: 1.5rem; display: inline-block; text-align: center; }
 span.R { color: #007f00; min-width: 1.5rem; display: inline-block; text-align: center; }
+.person.state { min-width: 1.5rem; display: inline-block; text-align: center; }
 
 #footer { text-align: center; padding-top: 2rem; font-size: 90%; }
 #footer a:link, #footer a:visited, #footer a:hover, #footer a:focus, #footer a:active { color: #3182bd; }
@@ -20,3 +21,6 @@ path.series { stroke-width: 4; fill: none; }
 path.series.s { stroke: #0000ff; }
 path.series.i { stroke: #ff0000; }
 path.series.r { stroke: #007f00; }
+
+tr.equation { height: 2.5rem; }
+td.equation { padding-left: 1em; }
